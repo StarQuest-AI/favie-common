@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "favie-common"
+version = "0.1.0"
+description = ""
+authors = ["hezhe <hezhe@shoppal.ai>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+asyncstdlib==3.12.4
+fastapi==0.108.0
+opentelemetry-api=1.25.0
+opentelemetry-exporter-gcp-trace=1.6.0
+opentelemetry-sdk=1.25.0
+python-json-logger=2.0.7
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
