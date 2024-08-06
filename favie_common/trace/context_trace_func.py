@@ -56,6 +56,28 @@ provider.add_span_processor(batch_processor)
 trace.set_tracer_provider(provider)
 tracer = trace.get_tracer(__name__)
 
+def log_info(msg, *args, json_msg=None, **kwargs):
+    """Log Info"""
+    span = trace.get_current_span()
+    extra = {
+        "otelTraceID": format(span.get_span_context().trace_id, "032x"),
+        "otelSpanID": format(span.get_span_context().span_id, "016x"),
+        "otelTraceSampled": span.get_span_context().trace_flags.sampled,
+        "json_fields": {"extra": json_msg or {}}
+    }
+
+    if "extra" in kwargs:
+        kwargs["extra"].update(extra)
+    else:
+        kwargs["extra"] = extra
+
+    logger.info(
+        msg,
+        *args,
+        **kwargs,
+    )
+
+
 
 async def async_to_json_obj(arg, k=None, args=None):
     if isinstance(arg, AsyncIterator) and args != None and k != None:
@@ -125,14 +147,10 @@ def set_stacktrace_output(
         stack_trace["output"] = to_json_obj(result)
 
     if "input" in stack_trace or "output" in stack_trace:
-        logger.info(
+        log_info(
             "%s",
             to_string(stack_trace),
-            extra={
-                "otelTraceID": format(span.get_span_context().trace_id, "032x"),
-                "otelSpanID": format(span.get_span_context().span_id, "016x"),
-                "otelTraceSampled": span.get_span_context().trace_flags.sampled,
-            },
+            json_msg=stack_trace
         )
 
 
