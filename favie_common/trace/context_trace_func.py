@@ -148,8 +148,7 @@ def set_stacktrace_output(
 
     if "input" in stack_trace or "output" in stack_trace:
         log_info(
-            "%s",
-            to_string(stack_trace),
+            "trace_log",
             json_msg=stack_trace
         )
 
